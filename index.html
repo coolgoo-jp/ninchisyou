@@ -23,13 +23,15 @@
     </script>
     <style>
         body { font-family: 'Noto Sans JP', sans-serif; background-color: #fdfdfd; scroll-behavior: smooth; }
+        /* 清潔感のあるフロストガラス */
         .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(25px); border: 1px solid rgba(255, 255, 255, 1); box-shadow: 0 20px 50px rgba(0, 84, 166, 0.08); }
+        /* スクロールアニメーション */
         .reveal { opacity: 0; transform: translateY(40px); transition: all 1.2s cubic-bezier(0.22, 1, 0.36, 1); }
         .reveal.active { opacity: 1; transform: translateY(0); }
         .btn-bounce { transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         .btn-bounce:hover { transform: scale(1.05); }
         #three-canvas { position: fixed; top: 0; left: 0; z-index: -1; pointer-events: none; opacity: 0.5; }
-        .readable-line { line-height: 2; letter-spacing: 0.03em; }
+        .readable-line { line-height: 2.1; letter-spacing: 0.03em; }
     </style>
 </head>
 <body class="text-gray-900 overflow-x-hidden">
@@ -46,12 +48,12 @@
                 認知症を「運命」から<br><span class="text-leafGreen">「制御可能な選択」</span>へ。
             </h1>
             <p class="text-xl md:text-2xl text-gray-700 mb-12 reveal">
-                2026年最新の疫学調査が示す、脳の「ゴミ」を溜めない新常識。<br>
+                2026年最新の疫学調査が示す、脳の「ゴミ」を溜めない生活習慣。<br>
                 なぜ脳は壊れるのか？ その因果を解き明かします。
             </p>
             <div class="reveal">
                 <a href="#intro" class="bg-deepBlue text-white px-12 py-6 rounded-full text-2xl font-bold btn-bounce shadow-2xl inline-block">
-                    詳細な報告を読む
+                    詳細な報告書を読む
                 </a>
             </div>
         </div>
@@ -67,7 +69,7 @@
                         </h2>
                         <div class="readable-line text-lg text-gray-700 space-y-6">
                             <p>厚生労働省の推計では、2040年には高齢者の約15%にあたる<strong>584万人</strong>が認知症になると予測されています。</p>
-                            <p>軽度認知障害（MCI）を含めると<strong>1,000万人</strong>を超え、高齢者の約3人に1人が直面する課題です。</p>
+                            <p>予備軍（MCI）を含めると<strong>1,000万人</strong>を超え、高齢者の約3人に1人が直面するこの課題は、もはや他人事ではありません。</p>
                         </div>
                     </div>
                     <img src="https://images.unsplash.com/photo-1581579186913-45ac3e6efe93?auto=format&fit=crop&w=800&q=80" 
@@ -83,34 +85,34 @@
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
                 <div class="glass-card rounded-4xl overflow-hidden reveal border-t-8 border-deepBlue">
-                    <img src="https://images.unsplash.com/photo-1559757175-5700dde675bc?auto=format&fit=crop&w=800&q=80" alt="Brain anatomy" class="w-full h-56 object-cover">
+                    <img src="https://images.unsplash.com/photo-1559757175-5700dde675bc?auto=format&fit=crop&w=800&q=80" alt="Brain science" class="w-full h-56 object-cover">
                     <div class="p-10">
                         <span class="text-leafGreen font-bold mb-2 block">第1位（約67.6%）</span>
                         <h3 class="text-2xl font-bold text-deepBlue mb-6">アルツハイマー型</h3>
                         <p class="text-gray-600 text-sm readable-line">
-                            脳に「アミロイドβ」というゴミが溜まり、神経細胞を壊す病態です。発症の20年以上前から静かに始まります。
+                            脳に「アミロイドβ」というゴミが溜まり、神経を壊す病態です。発症の20年以上前から静かに始まります。
                         </p>
                     </div>
                 </div>
 
                 <div class="glass-card rounded-4xl overflow-hidden reveal border-t-8 border-leafGreen" style="transition-delay: 0.1s;">
-                    <img src="https://images.unsplash.com/photo-1505751172876-fa1923c5c528?auto=format&fit=crop&w=800&q=80" alt="Medical tools" class="w-full h-56 object-cover">
+                    <img src="https://images.unsplash.com/photo-1505751172876-fa1923c5c528?auto=format&fit=crop&w=800&q=80" alt="Medical stethoscope" class="w-full h-56 object-cover">
                     <div class="p-10">
                         <span class="text-leafGreen font-bold mb-2 block">第2位（約20%）</span>
                         <h3 class="text-2xl font-bold text-deepBlue mb-6">血管性認知症</h3>
                         <p class="text-gray-600 text-sm readable-line">
-                            脳梗塞や血管のダメージが原因。高血圧や塩分過多が背景にあり、最も予防しやすいタイプです。
+                            脳梗塞や血管のダメージが原因。高血圧や塩分過多が背景にあり、予防が最も期待できるタイプです。
                         </p>
                     </div>
                 </div>
 
                 <div class="glass-card rounded-4xl overflow-hidden reveal border-t-8 border-gray-300" style="transition-delay: 0.2s;">
-                    <img src="https://images.unsplash.com/photo-1581056771107-24ca5f033842?auto=format&fit=crop&w=800&q=80" alt="Medical professional" class="w-full h-56 object-cover">
+                    <img src="https://images.unsplash.com/photo-1581056771107-24ca5f033842?auto=format&fit=crop&w=800&q=80" alt="Medical consultant" class="w-full h-56 object-cover">
                     <div class="p-10">
                         <span class="text-leafGreen font-bold mb-2 block">第3位〜</span>
                         <h3 class="text-2xl font-bold text-deepBlue mb-6">レビー小体・混合型</h3>
                         <p class="text-gray-600 text-sm readable-line">
-                            具体的な幻視や運動症状が伴うもの、複数の原因が重なる「混合型」などがあります。
+                            具体的な幻視や運動症状が伴うもの、複数の原因が重なる「混合型」など、複雑な病態が含まれます。
                         </p>
                     </div>
                 </div>
@@ -122,17 +124,15 @@
         <div class="container mx-auto">
             <h2 class="text-4xl md:text-5xl font-bold text-center text-white mb-20 reveal">脳を壊す「6つの危険因子」</h2>
             
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
                 
-                <div class="md:col-span-2 glass-card bg-white/10 rounded-4xl p-10 reveal border-white/20 text-white overflow-hidden">
+                <div class="lg:col-span-2 glass-card bg-white/10 rounded-4xl p-10 reveal border-white/20 text-white overflow-hidden">
                     <div class="flex flex-col md:flex-row gap-10">
                         <div class="md:w-1/2">
-                            <div class="flex items-center gap-4 mb-6">
-                                <span class="bg-red-500 text-white px-4 py-1 rounded-full text-xs font-bold">重要度 1位</span>
-                                <h3 class="text-3xl font-bold">血糖値ドカン</h3>
-                            </div>
+                            <span class="bg-red-500 text-white px-4 py-1 rounded-full text-xs font-bold mb-6 inline-block">影響度 1位</span>
+                            <h3 class="text-3xl font-bold mb-6">血糖値スパイク</h3>
                             <p class="text-blue-100 readable-line text-lg mb-4">
-                                食後の「血糖値スパイク」が脳の血管を傷つけます。リスクは最大<strong>2.65倍</strong>に跳ね上がります。
+                                食後の「血糖値ドカン」が脳の血管を直接ボロボロにします。リスクは最大<strong>2.65倍</strong>に。
                             </p>
                         </div>
                         <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=600&q=80" 
@@ -140,50 +140,51 @@
                     </div>
                 </div>
 
-                <div class="md:col-span-1 glass-card bg-white/10 rounded-4xl p-10 reveal border-white/20 text-white">
-                    <img src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=400&q=80" 
-                         alt="Meditation" class="w-full h-40 object-cover rounded-3xl mb-6">
+                <div class="glass-card bg-white/10 rounded-4xl p-10 reveal border-white/20 text-white">
+                    <img src="https://images.unsplash.com/photo-1499209974431-9dac3adaf471?auto=format&fit=crop&w=400&q=80" 
+                         alt="Quiet forest path" class="w-full h-40 object-cover rounded-3xl mb-6">
+                    <span class="bg-warm-orange text-white px-4 py-1 rounded-full text-xs font-bold mb-4 inline-block">影響度 2位</span>
                     <h3 class="text-2xl font-bold mb-4">強いストレス</h3>
                     <p class="text-blue-100 text-sm readable-line">
-                        記憶の司令塔「海馬」を直接萎縮させ、リスクは<strong>2.51倍</strong>になります。
+                        「海馬」を物理的に縮ませ、リスクは<strong>2.51倍</strong>。 脳の慢性炎症を加速させます。
                     </p>
                 </div>
 
                 <div class="glass-card bg-white/10 rounded-4xl p-10 reveal border-white/20 text-white">
                     <img src="https://images.unsplash.com/photo-1461896736914-cf646d978f2f?auto=format&fit=crop&w=400&q=80" 
-                         alt="Running shoes" class="w-full h-40 object-cover rounded-3xl mb-6">
+                         alt="Sneakers on ground" class="w-full h-40 object-cover rounded-3xl mb-6">
                     <h3 class="text-2xl font-bold mb-4">3位：運動不足</h3>
                     <p class="text-blue-100 text-sm readable-line">
-                        脳の栄養剤(BDNF)の供給が止まり、老廃物の排出を阻害します。
+                        「脳の肥料(BDNF)」の供給が断たれ、脳の清掃機能が低下。リスクは1.80倍です。
                     </p>
                 </div>
 
                 <div class="glass-card bg-white/10 rounded-4xl p-10 reveal border-white/20 text-white">
                     <img src="https://images.unsplash.com/photo-1522869635100-9f4c5e86aa37?auto=format&fit=crop&w=400&q=80" 
-                         alt="Watching TV" class="w-full h-40 object-cover rounded-3xl mb-6">
+                         alt="Television screen" class="w-full h-40 object-cover rounded-3xl mb-6">
                     <h3 class="text-2xl font-bold mb-4">4位：動画の視聴</h3>
                     <p class="text-blue-100 text-sm readable-line">
-                        4時間以上の受動的な視聴は前頭葉を「使わない萎縮」へ導きます。
+                        4時間以上の受動的な視聴は前頭葉を衰えさせます（HR 1.50）。 能動的な脳利用が重要。
                     </p>
                 </div>
 
                 <div class="glass-card bg-white/10 rounded-4xl p-10 reveal border-white/20 text-white">
                     <img src="https://images.unsplash.com/photo-1511295744334-f4d56f51bd33?auto=format&fit=crop&w=400&q=80" 
-                         alt="Clock on bed" class="w-full h-40 object-cover rounded-3xl mb-6">
+                         alt="White bed sheets" class="w-full h-40 object-cover rounded-3xl mb-6">
                     <h3 class="text-2xl font-bold mb-4">5位：長すぎる昼寝</h3>
                     <p class="text-blue-100 text-sm readable-line">
-                        1時間を超える昼寝は夜の「脳の掃除時間」を分断し、リスクを高めます。
+                        1時間を超えると夜の「深い睡眠（清掃時間）」が削られ、ゴミが溜まりやすくなります。
                     </p>
                 </div>
 
-                <div class="md:col-span-3 glass-card bg-white/20 rounded-4xl p-10 reveal border-white/40 text-white">
+                <div class="lg:col-span-3 glass-card bg-white/20 rounded-4xl p-10 reveal border-white/40 text-white">
                     <div class="flex flex-col md:flex-row items-center gap-10">
-                        <img src="https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?auto=format&fit=crop&w=600&q=80" 
-                             alt="Sunrise landscape" class="md:w-1/3 h-48 object-cover rounded-3xl">
-                        <div class="md:w-2/3 text-lg">
+                        <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=600&q=80" 
+                             alt="Morning light through trees" class="md:w-1/3 h-48 object-cover rounded-3xl">
+                        <div class="md:w-2/3">
                             <h3 class="text-3xl font-bold mb-6">6位：朝の散歩不足</h3>
-                            <p class="text-blue-100 readable-line">
-                                体内時計のリセット不足は、本来得られる強力な脳保護効果を放棄している状態です。
+                            <p class="text-blue-100 readable-line text-lg">
+                                朝日を浴びないことは、体内時計の乱れを招き、最強の脳保護メカニズムを放棄することを意味します。
                             </p>
                         </div>
                     </div>
@@ -197,13 +198,13 @@
         <div class="container mx-auto max-w-5xl">
             <h2 class="text-4xl md:text-5xl font-bold text-center text-deepBlue mb-20 reveal">明日から始める「3つの脳活」</h2>
             
-            <div class="space-y-20">
+            <div class="space-y-24">
                 <div class="flex flex-col md:flex-row gap-16 items-center reveal">
                     <img src="https://images.unsplash.com/photo-1490818387583-1bddd530c39c?auto=format&fit=crop&w=600&q=80" 
-                         alt="Healthy vegetables" class="w-full md:w-1/2 rounded-4xl shadow-2xl h-[400px] object-cover">
+                         alt="Fresh vegetables" class="w-full md:w-1/2 rounded-4xl shadow-2xl h-[400px] object-cover">
                     <div class="md:w-1/2">
-                        <div class="bg-leafGreen/10 text-leafGreen font-bold px-4 py-1 rounded-full text-sm inline-block mb-4">STEP 01</div>
-                        <h3 class="text-3xl font-bold text-deepBlue mb-8">食事は「野菜から」</h3>
+                        <span class="text-leafGreen font-bold block mb-4">対策 01</span>
+                        <h3 class="text-3xl md:text-4xl font-bold text-deepBlue mb-8">食事は「野菜から」</h3>
                         <p class="text-lg leading-loose text-gray-700">
                             血糖値を急に上げない「ベジファースト」を徹底。食後すぐの軽い動作で脳へのダメージを遮断します。
                         </p>
@@ -211,23 +212,23 @@
                 </div>
 
                 <div class="flex flex-col md:flex-row-reverse gap-16 items-center reveal">
-                    <img src="https://images.unsplash.com/photo-1502082553048-f009c37129b9?auto=format&fit=crop&w=600&q=80" 
-                         alt="Peaceful morning walk path" class="w-full md:w-1/2 rounded-4xl shadow-2xl h-[400px] object-cover">
+                    <img src="https://images.unsplash.com/photo-1470246973918-29a93221c455?auto=format&fit=crop&w=600&q=80" 
+                         alt="Morning park path" class="w-full md:w-1/2 rounded-4xl shadow-2xl h-[400px] object-cover">
                     <div class="md:w-1/2">
-                        <div class="bg-leafGreen/10 text-leafGreen font-bold px-4 py-1 rounded-full text-sm inline-block mb-4">STEP 02</div>
-                        <h3 class="text-3xl font-bold text-deepBlue mb-8">起床後1時間の「散歩」</h3>
+                        <span class="text-leafGreen font-bold block mb-4">対策 02</span>
+                        <h3 class="text-3xl md:text-4xl font-bold text-deepBlue mb-8">朝15分の散歩</h3>
                         <p class="text-lg leading-loose text-gray-700">
-                            太陽光が体内時計をリセットし、夜の「脳内掃除」を予約。神経保護への最大の投資となります。
+                            太陽光が体内時計をリセットし、夜の「脳内掃除」を予約。これが認知症予防への最大の投資となります。
                         </p>
                     </div>
                 </div>
 
                 <div class="flex flex-col md:flex-row gap-16 items-center reveal">
                     <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=600&q=80" 
-                         alt="Communication" class="w-full md:w-1/2 rounded-4xl shadow-2xl h-[400px] object-cover">
+                         alt="Conversation and social" class="w-full md:w-1/2 rounded-4xl shadow-2xl h-[400px] object-cover">
                     <div class="md:w-1/2">
-                        <div class="bg-leafGreen/10 text-leafGreen font-bold px-4 py-1 rounded-full text-sm inline-block mb-4">STEP 03</div>
-                        <h3 class="text-3xl font-bold text-deepBlue mb-8">脳を「動かす」楽しみ</h3>
+                        <span class="text-leafGreen font-bold block mb-4">対策 03</span>
+                        <h3 class="text-3xl md:text-4xl font-bold text-deepBlue mb-8">脳を「能動的」に使う</h3>
                         <p class="text-lg leading-loose text-gray-700">
                             受動的な視聴から、誰かと話す・趣味に没頭するなどの能動的活動へ。脳の若さを保つ肥料となります。
                         </p>
@@ -239,15 +240,17 @@
 
     <footer class="bg-lightGrey py-32 px-6 border-t border-gray-200">
         <div class="container mx-auto text-center max-w-4xl">
-            <h2 class="text-3xl font-bold text-deepBlue mb-10 text-center">今日の選択が、10年後の脳を作ります。</h2>
-            <div class="mb-20 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold text-deepBlue mb-10">
+                今日の選択が、10年後の脳を作ります。
+            </h2>
+            <div class="mb-20">
                 <button class="bg-leafGreen text-white px-12 py-6 rounded-full text-2xl font-bold btn-bounce shadow-2xl">
                     生活習慣チェックを開始する
                 </button>
             </div>
-            <p class="text-xs text-gray-400 text-center">
+            <p class="text-xs text-gray-400">
                 © 2026 Comprehensive Report on Dementia. <br>
-                監修協力：日本認知症疫学研究グループ / 出典：久山町研究, Lancet 2024, 厚生労働省最新推計.
+                出典：久山町研究, Lancet 2024, 厚生労働省最新推計
             </p>
         </div>
     </footer>
@@ -261,6 +264,7 @@
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         camera.position.z = 5;
 
+        // 有機的な浮かぶ光（脳の可塑性を象徴）
         const geometry = new THREE.IcosahedronGeometry(2, 6);
         const material = new THREE.MeshStandardMaterial({
             color: 0xffffff, roughness: 0.1, metalness: 0.1, transparent: true, opacity: 0.1, wireframe: true
@@ -288,6 +292,7 @@
         }
         animate();
 
+        // 表示アニメーション
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) entry.target.classList.add('active');
