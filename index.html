@@ -1,0 +1,374 @@
+# ninchi<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026 Dementia Analysis | 日本における認知症の疫学的分析と対策</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;800&family=Noto+Sans+JP:wght@300;400;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --accent-blue: #007AFF;
+            --accent-lime: #DFFF00;
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+            background: #020617;
+            color: #f8fafc;
+            overflow-x: hidden;
+        }
+
+        /* Grainy Gradient Background */
+        .bg-grainy {
+            background: radial-gradient(circle at 50% 50%, #1e293b 0%, #020617 100%);
+            position: fixed;
+            width: 100vw;
+            height: 100vh;
+            z-index: -2;
+        }
+        .bg-grainy::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            opacity: 0.04;
+            pointer-events: none;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3ExternalIcon %3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            z-index: -1;
+        }
+
+        /* Glassmorphism */
+        .glass {
+            background: var(--glass);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        .glass:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+
+        /* Animations */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #020617; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+
+        #three-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .text-gradient {
+            background: linear-gradient(to right, #fff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: auto;
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 1024px) {
+            .bento-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 640px) {
+            .bento-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-grainy"></div>
+
+    <header class="relative h-screen flex items-center justify-center overflow-hidden px-6">
+        <div id="three-canvas"></div>
+        <div class="relative z-10 text-center max-w-5xl">
+            <span class="inline-block px-4 py-1.5 mb-6 text-xs font-bold tracking-widest uppercase border border-blue-500/50 rounded-full text-blue-400 glass">
+                2026 Pathological Report
+            </span>
+            <h1 class="text-6xl md:text-8xl font-black mb-8 leading-tight tracking-tighter">
+                <span class="text-gradient">3人に1人の未来を、</span><br>
+                <span class="text-blue-500">科学で書き換える。</span>
+            </h1>
+            <p class="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed font-light">
+                2040年、日本の高齢者の約15%が直面する認知機能の低下。最新のエビデンスに基づき、その原因疾患と「修正可能なリスク因子」を解き明かします。
+            </p>
+            <div class="mt-12">
+                <a href="#analysis" class="px-8 py-4 bg-white text-black font-bold rounded-full hover:scale-110 transition-transform inline-block">
+                    詳細を分析する
+                </a>
+            </div>
+        </div>
+        <div class="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce opacity-50">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 14l-7 7-7-7m14-8l-7 7-7-7"></path></svg>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-6 py-24 space-y-32">
+        
+        <section id="analysis" class="fade-up">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="glass p-10 flex flex-col justify-between">
+                    <h3 class="text-slate-400 text-sm font-bold uppercase tracking-widest">2040年推計</h3>
+                    <div>
+                        <span class="text-6xl font-black text-white">584</span><span class="text-2xl font-bold ml-2">万人</span>
+                        <p class="mt-4 text-slate-400">認知症有病率。MCIを含めると1,000万人を超えると予測されています。</p>
+                    </div>
+                </div>
+                <div class="glass p-10 border-l-4 border-blue-500">
+                    <h3 class="text-slate-400 text-sm font-bold uppercase tracking-widest">最頻出疾患</h3>
+                    <div class="mt-6">
+                        <span class="text-5xl font-black text-gradient">67.6%</span>
+                        <p class="mt-4 text-slate-400">アルツハイマー型認知症。日本における構造変化（パラダイムシフト）の象徴。</p>
+                    </div>
+                </div>
+                <div class="glass p-10">
+                    <h3 class="text-slate-400 text-sm font-bold uppercase tracking-widest">予防可能性</h3>
+                    <div class="mt-6">
+                        <span class="text-5xl font-black text-lime-400">45%</span>
+                        <p class="mt-4 text-slate-400">Lancet委員会が提唱する、生活習慣の修正によって回避可能なリスクの割合。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="space-y-12 fade-up">
+            <div class="text-center">
+                <h2 class="text-4xl md:text-5xl font-black mb-4">原因疾患の深層分析</h2>
+                <p class="text-slate-400">日本における原因疾患の構成比と病理学的背景</p>
+            </div>
+            
+            <div class="bento-grid">
+                <div class="col-span-1 md:col-span-2 row-span-2 glass overflow-hidden relative group">
+                    <img src="https://images.unsplash.com/photo-1559757175-5700dde675bc?auto=format&fit=crop&q=80&w=800" class="absolute inset-0 w-full h-full object-cover opacity-20 group-hover:scale-110 transition-transform duration-700" alt="Brain">
+                    <div class="relative p-10 h-full flex flex-col justify-end">
+                        <span class="text-blue-400 font-bold mb-2">Rank 01</span>
+                        <h3 class="text-3xl font-black mb-4">アルツハイマー型 (AD)</h3>
+                        <p class="text-slate-300 leading-relaxed">アミロイドβの蓄積から始まる静かな進行。日本人の長寿化に伴い圧倒的な最頻出疾患へ。</p>
+                    </div>
+                </div>
+
+                <div class="col-span-1 md:col-span-2 glass p-10 flex items-center gap-8">
+                    <div class="hidden md:block w-32 h-32 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-900 shrink-0"></div>
+                    <div>
+                        <span class="text-slate-400 font-bold mb-2 uppercase tracking-tighter text-xs">Rank 02 | 19.5%</span>
+                        <h3 class="text-2xl font-black mb-2">血管性認知症 (VaD)</h3>
+                        <p class="text-sm text-slate-400">脳梗塞や微小血管病変の蓄積。生活習慣の管理で最も予防が期待できる領域。</p>
+                    </div>
+                </div>
+
+                <div class="glass p-8 flex flex-col justify-between">
+                    <h3 class="text-xl font-bold">レビー小体型</h3>
+                    <p class="text-sm text-slate-400 mt-4">幻視やパーキンソニズムが特徴。誤診を防ぐ正確な鑑別が重要。</p>
+                </div>
+
+                <div class="glass p-8 flex flex-col justify-between">
+                    <h3 class="text-xl font-bold">前頭側頭型</h3>
+                    <p class="text-sm text-slate-400 mt-4">若年性でも見られる人格変化。行動異常が初期から目立つ特殊な病態。</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="space-y-12 fade-up">
+            <div class="flex flex-col md:flex-row justify-between items-end gap-6">
+                <div class="max-w-2xl">
+                    <h2 class="text-4xl md:text-5xl font-black mb-4 italic text-lime-400 underline decoration-lime-400/30">Lifestyle Risks Impact</h2>
+                    <p class="text-slate-400 text-lg">特定の習慣が脳内炎症を加速させる。科学的影響度の順位付け。</p>
+                </div>
+                <div class="text-right">
+                    <span class="text-xs font-mono text-slate-500">Sorted by Hazard Ratio (HR)</span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="glass p-8 border-t-4 border-red-500">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="bg-red-500/10 text-red-500 p-2 rounded-lg font-black text-sm">Critical</div>
+                        <span class="text-4xl font-black opacity-20">01</span>
+                    </div>
+                    <h4 class="text-xl font-black mb-3">血糖値スパイク</h4>
+                    <p class="text-sm text-slate-400 leading-relaxed mb-6">「糖毒性」による血管内皮障害。酸化ストレスが脳の防御機構を破壊します。</p>
+                    <div class="h-1 bg-slate-800 rounded-full overflow-hidden">
+                        <div class="w-full h-full bg-red-500"></div>
+                    </div>
+                </div>
+                <div class="glass p-8 border-t-4 border-orange-500">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="bg-orange-500/10 text-orange-500 p-2 rounded-lg font-black text-sm">Severe</div>
+                        <span class="text-4xl font-black opacity-20">02</span>
+                    </div>
+                    <h4 class="text-xl font-black mb-3">強いストレス</h4>
+                    <p class="text-sm text-slate-400 leading-relaxed mb-6">コルチゾールの過剰分泌が海馬を物理的に萎縮させ、神経炎症を引き起こします。</p>
+                    <div class="h-1 bg-slate-800 rounded-full overflow-hidden">
+                        <div class="w-[85%] h-full bg-orange-500"></div>
+                    </div>
+                </div>
+                <div class="glass p-8 border-t-4 border-yellow-500">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="bg-yellow-500/10 text-yellow-500 p-2 rounded-lg font-black text-sm">High</div>
+                        <span class="text-4xl font-black opacity-20">03</span>
+                    </div>
+                    <h4 class="text-xl font-black mb-3">運動不足</h4>
+                    <p class="text-sm text-slate-400 leading-relaxed mb-6">脳の肥料「BDNF」の供給低下。ゴミ（アミロイドβ）の排出機能が停滞します。</p>
+                    <div class="h-1 bg-slate-800 rounded-full overflow-hidden">
+                        <div class="w-[70%] h-full bg-yellow-500"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass p-12 bg-blue-600/5 relative overflow-hidden">
+                <div class="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                    <div>
+                        <h3 class="text-3xl font-black mb-6">最強の防御習慣：朝の散歩</h3>
+                        <ul class="space-y-4 text-slate-300">
+                            <li class="flex items-center gap-3">
+                                <div class="w-2 h-2 bg-lime-400 rounded-full"></div>
+                                体内時計のリセットとメラトニン予約
+                            </li>
+                            <li class="flex items-center gap-3">
+                                <div class="w-2 h-2 bg-lime-400 rounded-full"></div>
+                                セロトニン活性による「脳内洗浄」の最大化
+                            </li>
+                            <li class="flex items-center gap-3">
+                                <div class="w-2 h-2 bg-lime-400 rounded-full"></div>
+                                複雑な屋外環境が海馬を強力に刺激
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="rounded-3xl overflow-hidden aspect-video">
+                        <img src="https://images.unsplash.com/photo-1502082553048-f009c37129b9?auto=format&fit=crop&q=80&w=800" class="w-full h-full object-cover" alt="Nature walk">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="text-center py-24 fade-up">
+            <div class="glass p-16 max-w-4xl mx-auto border-2 border-blue-500/20">
+                <h2 class="text-4xl md:text-5xl font-black mb-8">認知機能寿命を、<br>あなたの手で延ばす。</h2>
+                <p class="text-slate-400 mb-12 max-w-xl mx-auto leading-relaxed">
+                    老化は避けられませんが、認知症の発症は科学的な介入によってコントロール可能です。今日から始める「一歩」が、10年後の自分を守ります。
+                </p>
+                <button class="px-12 py-5 bg-blue-600 hover:bg-blue-500 text-white font-black rounded-full transition-all hover:scale-105 hover:shadow-[0_0_40px_rgba(37,99,235,0.4)]">
+                    詳細レポートをダウンロード
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <footer class="py-12 px-6 border-t border-slate-800 text-center text-slate-500 text-sm">
+        <p>&copy; 2026 NeuroScience Report Japan. Created with Visionary UI.</p>
+    </footer>
+
+    <script>
+        // --- Three.js Implementation (Organic Neuron Sphere) ---
+        const initThree = () => {
+            const container = document.getElementById('three-canvas');
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            container.appendChild(renderer.domElement);
+
+            // Create organic wireframe sphere
+            const geometry = new THREE.IcosahedronGeometry(2, 4);
+            const material = new THREE.MeshStandardMaterial({
+                color: 0x007AFF,
+                wireframe: true,
+                transparent: true,
+                opacity: 0.15,
+                emissive: 0x007AFF,
+                emissiveIntensity: 0.5
+            });
+            const sphere = new THREE.Mesh(geometry, material);
+            scene.add(sphere);
+
+            const light = new THREE.PointLight(0xffffff, 1);
+            light.position.set(5, 5, 5);
+            scene.add(light);
+            scene.add(new THREE.AmbientLight(0x404040));
+
+            camera.position.z = 5;
+
+            // Animation
+            const animate = () => {
+                requestAnimationFrame(animate);
+                sphere.rotation.y += 0.002;
+                sphere.rotation.x += 0.001;
+                
+                // Subtle morphing
+                const time = Date.now() * 0.001;
+                sphere.scale.set(
+                    1 + Math.sin(time) * 0.05,
+                    1 + Math.cos(time * 1.2) * 0.05,
+                    1 + Math.sin(time * 0.8) * 0.05
+                );
+                
+                renderer.render(scene, camera);
+            };
+
+            // Mouse tracking
+            window.addEventListener('mousemove', (e) => {
+                const x = (e.clientX / window.innerWidth) - 0.5;
+                const y = (e.clientY / window.innerHeight) - 0.5;
+                sphere.position.x = x * 0.5;
+                sphere.position.y = -y * 0.5;
+            });
+
+            animate();
+
+            // Resize
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+        };
+
+        // --- Intersection Observer (Fade-up) ---
+        const initAnimations = () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+        };
+
+        window.onload = () => {
+            initThree();
+            initAnimations();
+        };
+    </script>
+</body>
+</html>syou
