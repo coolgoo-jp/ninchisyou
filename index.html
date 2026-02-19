@@ -3,73 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEURO CARE | 認知症の原因と対策 - テクノロジーで守る健やかな未来</title>
+    <title>認知症を正しく知る・備える｜解説ガイド</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary-blue: #0054A6;
             --accent-lime: #88C440;
+            --text-main: #1A202C;
         }
         body {
-            font-family: 'Inter', 'Noto Sans JP', sans-serif;
-            background-color: #f8fafc;
-            color: #1e293b;
+            font-family: 'Noto Sans JP', sans-serif;
+            background-color: #fdfeff;
+            color: var(--text-main);
             overflow-x: hidden;
+            line-height: 1.8;
         }
 
-        /* Grainy Gradient Background */
+        /* 背景：清潔感のあるグラデーションとノイズ */
         .bg-grainy {
-            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #f7fee7 100%);
+            background: linear-gradient(135deg, #f0f7ff 0%, #ffffff 50%, #f9fff0 100%);
             position: relative;
         }
         .bg-grainy::before {
             content: "";
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            opacity: 0.03;
+            opacity: 0.04;
             pointer-events: none;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-            z-index: 1;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            z-index: 0;
         }
 
-        /* Glassmorphism */
-        .glass-card {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
-            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        /* 解説用カード（グラスモーフィズム） */
+        .info-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 2rem;
+            transition: all 0.3s ease;
         }
-        .glass-card:hover {
-            transform: translateY(-8px) scale(1.01);
-            box-shadow: 0 12px 48px 0 rgba(31, 38, 135, 0.12);
+        .info-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 20px 40px rgba(0, 84, 166, 0.08);
         }
 
-        /* Animations */
-        .fade-in-up {
+        .fade-in {
             opacity: 0;
-            transform: translateY(30px);
+            transform: translateY(20px);
             transition: all 0.8s ease-out;
         }
-        .fade-in-up.visible {
+        .fade-in.visible {
             opacity: 1;
             transform: translateY(0);
         }
 
         #three-canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 0;
-            pointer-events: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            opacity: 0.6;
         }
 
-        .text-gradient {
-            background: linear-gradient(to right, var(--primary-blue), #2563eb);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        .section-title {
+            position: relative;
+            display: inline-block;
+            padding-bottom: 0.5rem;
+        }
+        .section-title::after {
+            content: '';
+            position: absolute;
+            left: 0; bottom: 0; width: 60%; height: 4px;
+            background: var(--accent-lime);
+            border-radius: 2px;
+        }
+
+        /* 強調文字 */
+        .highlight {
+            background: linear-gradient(transparent 70%, #d9f99d 70%);
+            font-weight: bold;
         }
     </style>
 </head>
@@ -77,146 +91,179 @@
 
     <canvas id="three-canvas"></canvas>
 
-    <nav class="fixed w-full z-50 px-6 py-4">
-        <div class="max-w-7xl mx-auto flex justify-between items-center glass-card rounded-full px-8 py-3">
-            <div class="text-2xl font-bold text-gradient">NEURO CARE</div>
-            <div class="hidden md:flex space-x-8 font-medium">
-                <a href="#causes" class="hover:text-blue-600 transition">原因を知る</a>
-                <a href="#countermeasures" class="hover:text-blue-600 transition">対策を学ぶ</a>
-                <a href="#data" class="hover:text-blue-600 transition">現状データ</a>
+    <header class="fixed w-full z-50 px-4 md:px-8 py-4">
+        <div class="max-w-7xl mx-auto flex justify-between items-center info-card px-6 py-3 shadow-sm">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 bg-blue-600 rounded-lg"></div>
+                <span class="text-xl font-bold tracking-tight text-blue-900">認知症解説ガイド</span>
             </div>
-            <button class="bg-blue-600 text-white px-6 py-2 rounded-full font-bold hover:bg-blue-700 transition transform hover:scale-105 active:scale-95">
-                無料相談
-            </button>
+            <nav class="hidden lg:flex space-x-6 text-sm font-bold">
+                <a href="#about" class="hover:text-blue-600">認知症とは</a>
+                <a href="#causes" class="hover:text-blue-600">主な原因</a>
+                <a href="#prevention" class="hover:text-blue-600">対策と予防</a>
+                <a href="#contact" class="hover:text-blue-600">相談先</a>
+            </nav>
         </div>
-    </nav>
+    </header>
 
-    <section class="relative min-h-screen flex items-center justify-center pt-20 px-6 overflow-hidden">
-        <div class="relative z-10 text-center max-w-4xl">
-            <span class="inline-block bg-lime-100 text-lime-700 px-4 py-1 rounded-full text-sm font-bold mb-6 fade-in-up">Healthcare × Technology</span>
-            <h1 class="text-5xl md:text-7xl font-bold mb-8 leading-tight fade-in-up">
-                認知症の未来を、<br><span class="text-gradient">今、守る。</span>
+    <main class="relative pt-32 pb-20 px-6">
+        <div class="max-w-5xl mx-auto text-center">
+            <h1 class="text-4xl md:text-6xl font-extrabold mb-8 leading-tight fade-in">
+                正しく知ることで、<br>
+                <span class="text-blue-600">明日への備え</span>をはじめる
             </h1>
-            <p class="text-xl md:text-2xl text-slate-600 mb-12 leading-relaxed fade-in-up">
-                正しい知識と、毎日の小さな習慣が、<br class="hidden md:block">
-                あなたの脳の若々しさを一生涯サポートします。
+            <p class="text-lg md:text-xl text-slate-700 mb-10 max-w-3xl mx-auto fade-in">
+                認知症は誰にでも起こりうる脳の病気です。原因を理解し、毎日の生活を少し整えることで、自分らしく過ごせる時間を延ばすことができます。
             </p>
-            <div class="flex flex-col md:flex-row justify-center gap-4 fade-in-up">
-                <a href="#causes" class="bg-blue-600 text-white px-10 py-4 rounded-2xl text-lg font-bold shadow-lg hover:bg-blue-700 transition">原因を詳しく見る</a>
-                <a href="#countermeasures" class="bg-white text-blue-600 border-2 border-blue-600 px-10 py-4 rounded-2xl text-lg font-bold hover:bg-blue-50 transition">対策ガイドを読む</a>
-            </div>
         </div>
-    </section>
 
-    <section id="causes" class="py-24 px-6 max-w-7xl mx-auto">
-        <h2 class="text-3xl md:text-5xl font-bold text-center mb-16 fade-in-up">知っておくべき、<br class="md:hidden">認知症のメカニズム</h2>
-        
-        <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
-            <div class="md:col-span-8 glass-card rounded-[2.5rem] p-10 flex flex-col justify-between overflow-hidden relative fade-in-up">
-                <div>
-                    <span class="text-blue-600 font-bold mb-4 block">CAUSE 01</span>
-                    <h3 class="text-3xl font-bold mb-4">アミロイドβの蓄積</h3>
-                    <p class="text-lg text-slate-600 max-w-md">脳内に蓄積する「ゴミ」が、神経細胞を傷つける主要な原因の一つと言われています。早期のケアが重要です。</p>
-                </div>
-                <img src="https://images.unsplash.com/photo-1559757175-5700dde675bc?auto=format&fit=crop&q=80&w=800" alt="Microscopic view" class="absolute bottom-0 right-0 w-1/2 h-64 object-cover rounded-tl-[3rem] opacity-80">
-            </div>
-
-            <div class="md:col-span-4 bg-blue-600 rounded-[2.5rem] p-10 text-white flex flex-col justify-center fade-in-up">
-                <div class="text-5xl font-bold mb-4">1/5</div>
-                <p class="text-xl">日本の65歳以上の<br>5人に1人が<br>認知症になる予測です。</p>
-            </div>
-
-            <div class="md:col-span-4 glass-card rounded-[2.5rem] p-10 fade-in-up">
-                <div class="bg-lime-100 w-16 h-16 rounded-2xl flex items-center justify-center mb-6 text-lime-600">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
-                </div>
-                <h3 class="text-xl font-bold mb-2">生活習慣病の影響</h3>
-                <p class="text-slate-600">高血圧や糖尿病は、認知症リスクを高める要因となります。</p>
-            </div>
-
-            <div class="md:col-span-8 glass-card rounded-[2.5rem] p-0 overflow-hidden flex flex-col md:flex-row fade-in-up">
-                <div class="p-10 md:w-1/2">
-                    <span class="text-blue-600 font-bold mb-4 block">CAUSE 02</span>
-                    <h3 class="text-3xl font-bold mb-4">加齢と遺伝</h3>
-                    <p class="text-lg text-slate-600">年齢とともにリスクは上がりますが、適切な対策で進行を遅らせることが可能です。</p>
-                </div>
-                <div class="md:w-1/2 h-64 md:h-auto">
-                    <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=800" alt="DNA Technology" class="w-full h-full object-cover">
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="countermeasures" class="py-24 bg-white/50 backdrop-blur-md">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="flex flex-col md:flex-row items-end justify-between mb-16 gap-6">
-                <div class="max-w-2xl">
-                    <h2 class="text-3xl md:text-5xl font-bold mb-6">今日から始める、<br><span class="text-blue-600">3つの脳活習慣</span></h2>
-                    <p class="text-xl text-slate-600">科学的に根拠のある対策を、シンプルにまとめました。</p>
-                </div>
-                <div class="text-right">
-                    <div class="text-6xl font-bold text-lime-500">80%</div>
-                    <div class="text-slate-500 font-bold">早期発見での改善率</div>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="group cursor-pointer">
-                    <div class="mb-6 overflow-hidden rounded-[2rem] h-64 shadow-xl">
-                        <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80&w=800" alt="Exercise" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+        <section id="about" class="max-w-7xl mx-auto mt-20 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+            <div class="fade-in">
+                <h2 class="text-3xl font-bold mb-6 section-title">認知症とは？</h2>
+                <p class="text-lg mb-6">
+                    認知症とは、いろいろな原因で脳の細胞が壊れたり、働きが悪くなったりすることで、<span class="highlight">日常生活に支障が出ている状態</span>のことを指します。
+                </p>
+                <div class="space-y-4">
+                    <div class="flex gap-4 p-4 bg-white/60 rounded-xl border-l-4 border-blue-500">
+                        <p><strong>単なる物忘れとの違い：</strong> 体験したことの一部（朝食の内容）を忘れるのが「物忘れ」、体験したこと自体（食べたこと）を忘れるのが「認知症」のサインです。</p>
                     </div>
-                    <h3 class="text-2xl font-bold mb-4 flex items-center">
-                        <span class="w-8 h-8 rounded-full bg-blue-600 text-white text-sm flex items-center justify-center mr-3 italic">01</span>
-                        有酸素運動
-                    </h3>
-                    <p class="text-slate-600 leading-relaxed">1日30分の散歩が、脳の血流を改善し、海馬の活性化を促します。</p>
                 </div>
+            </div>
+            <div class="fade-in rounded-[2.5rem] overflow-hidden shadow-2xl">
+                <img src="https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?auto=format&fit=crop&q=80&w=800" alt="Family conversation" class="w-full h-full object-cover">
+            </div>
+        </section>
+
+        <section id="causes" class="max-w-7xl mx-auto mt-32">
+            <h2 class="text-3xl font-bold mb-12 text-center section-title">認知症を引き起こす「4つの原因」</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 
-                <div class="group cursor-pointer">
-                    <div class="mb-6 overflow-hidden rounded-[2rem] h-64 shadow-xl">
-                        <img src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?auto=format&fit=crop&q=80&w=800" alt="Food" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+                <div class="lg:col-span-2 info-card p-8 flex flex-col justify-between fade-in">
+                    <div>
+                        <span class="text-blue-600 font-bold text-sm block mb-2 uppercase tracking-widest">Type 01</span>
+                        <h3 class="text-2xl font-bold mb-4">アルツハイマー型</h3>
+                        <p class="text-slate-600 mb-6">認知症全体の約7割を占めます。脳に「アミロイドβ」という特殊なたんぱく質が溜まり、神経細胞が死滅して脳が萎縮（縮むこと）していくのが原因です。</p>
+                        <ul class="text-sm space-y-2 text-blue-800 font-medium">
+                            <li>・新しいことが覚えられない</li>
+                            <li>・時間や場所がわからなくなる</li>
+                        </ul>
                     </div>
-                    <h3 class="text-2xl font-bold mb-4 flex items-center">
-                        <span class="w-8 h-8 rounded-full bg-blue-600 text-white text-sm flex items-center justify-center mr-3 italic">02</span>
-                        地中海式食事法
-                    </h3>
-                    <p class="text-slate-600 leading-relaxed">魚、オリーブオイル、野菜を中心とした食生活が脳細胞を守ります。</p>
+                    <img src="https://images.unsplash.com/photo-1559757175-5700dde675bc?auto=format&fit=crop&q=80&w=400" class="mt-8 rounded-2xl h-40 w-full object-cover opacity-80" alt="Brain neuron image">
                 </div>
 
-                <div class="group cursor-pointer">
-                    <div class="mb-6 overflow-hidden rounded-[2rem] h-64 shadow-xl">
-                        <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&q=80&w=800" alt="Community" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+                <div class="info-card p-8 fade-in">
+                    <span class="text-blue-600 font-bold text-sm block mb-2 uppercase tracking-widest">Type 02</span>
+                    <h3 class="text-2xl font-bold mb-4">血管性認知症</h3>
+                    <p class="text-slate-600 text-sm">脳梗塞や脳出血などで、脳の血管が詰まったり破れたりすることで起こります。生活習慣病（高血圧や糖尿病）との関わりが非常に深いです。</p>
+                </div>
+
+                <div class="info-card p-8 fade-in">
+                    <span class="text-blue-600 font-bold text-sm block mb-2 uppercase tracking-widest">Type 03</span>
+                    <h3 class="text-2xl font-bold mb-4">レビー小体型</h3>
+                    <p class="text-slate-600 text-sm">「レビー小体」というたんぱく質の塊が脳にできるのが原因です。実際にはないものが見える「幻視」や、手足の震えが特徴です。</p>
+                </div>
+
+                <div class="lg:col-span-2 info-card p-8 flex gap-6 items-center fade-in">
+                    <div class="flex-1">
+                        <span class="text-blue-600 font-bold text-sm block mb-2 uppercase tracking-widest">Type 04</span>
+                        <h3 class="text-2xl font-bold mb-4 text-sm md:text-2xl">前頭側頭型</h3>
+                        <p class="text-slate-600 text-sm">脳の前（前頭葉）や横（側頭葉）が萎縮します。感情の抑制が効かなくなったり、言葉がうまく出なくなったりします。</p>
                     </div>
-                    <h3 class="text-2xl font-bold mb-4 flex items-center">
-                        <span class="w-8 h-8 rounded-full bg-blue-600 text-white text-sm flex items-center justify-center mr-3 italic">03</span>
-                        社会との繋がり
-                    </h3>
-                    <p class="text-slate-600 leading-relaxed">会話や趣味の集まりは、最も強力な脳への刺激になります。</p>
+                    <div class="w-1/3 hidden sm:block">
+                        <img src="https://images.unsplash.com/photo-1507413245164-6160d8298b31?auto=format&fit=crop&q=80&w=400" class="rounded-2xl" alt="Technology and human">
+                    </div>
+                </div>
+
+                <div class="lg:col-span-2 bg-slate-100/50 border border-slate-200 rounded-[2rem] p-8 fade-in">
+                    <h3 class="font-bold mb-2">その他の原因</h3>
+                    <p class="text-sm text-slate-500">慢性硬膜下血腫や正常圧水頭症など、治療によって「治る認知症」もあります。まずは専門医による診断が不可欠です。</p>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section class="py-24 px-6">
-        <div class="max-w-5xl mx-auto bg-slate-900 rounded-[3rem] p-12 md:p-20 text-center relative overflow-hidden shadow-2xl">
-            <div class="relative z-10">
-                <h2 class="text-4xl md:text-6xl font-bold text-white mb-8">健やかな記憶を、<br>家族と共に。</h2>
-                <p class="text-xl text-slate-300 mb-12">あなたの現在のリスクを、最新のデジタルチェックで診断してみませんか？</p>
-                <button class="bg-lime-500 text-slate-900 px-12 py-5 rounded-2xl text-xl font-bold hover:bg-lime-400 transition transform hover:scale-105">
-                    無料脳健康診断を始める
-                </button>
+        <section id="prevention" class="max-w-7xl mx-auto mt-32">
+            <div class="bg-blue-900 rounded-[3rem] p-10 md:p-20 text-white overflow-hidden relative">
+                <div class="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-16">
+                    <div>
+                        <h2 class="text-4xl font-bold mb-8">日常生活でできる対策</h2>
+                        <p class="text-blue-200 mb-12 text-lg italic">「脳活」は、早ければ早いほど効果的です。</p>
+                        
+                        <div class="space-y-8">
+                            <div class="flex gap-6">
+                                <div class="w-12 h-12 bg-lime-500 rounded-full flex items-center justify-center font-bold text-blue-900 shrink-0">1</div>
+                                <div>
+                                    <h4 class="text-xl font-bold mb-2">食事：脳を守る栄養を</h4>
+                                    <p class="text-blue-100">野菜、果物、魚（オメガ3脂肪酸）を積極的に摂る「地中海式」に近い食事が理想です。塩分を控え、高血圧を防ぎましょう。</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-6">
+                                <div class="w-12 h-12 bg-lime-500 rounded-full flex items-center justify-center font-bold text-blue-900 shrink-0">2</div>
+                                <div>
+                                    <h4 class="text-xl font-bold mb-2">運動：1日30分の散歩</h4>
+                                    <p class="text-blue-100">歩くことで脳の血流が良くなります。しりとりをしながら歩くなど「2つのことを同時に行う」とさらに効果的です。</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-6">
+                                <div class="w-12 h-12 bg-lime-500 rounded-full flex items-center justify-center font-bold text-blue-900 shrink-0">3</div>
+                                <div>
+                                    <h4 class="text-xl font-bold mb-2">交流：会話は最高の刺激</h4>
+                                    <p class="text-blue-100">人と会って話すことは、脳のあらゆる機能を使います。趣味の集まりや地域のイベントに顔を出してみましょう。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <img src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?auto=format&fit=crop&q=80&w=400" class="rounded-2xl h-full object-cover shadow-lg" alt="Healthy food">
+                        <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80&w=400" class="rounded-2xl h-full object-cover shadow-lg mt-8" alt="Walking exercise">
+                    </div>
+                </div>
             </div>
-            <div class="absolute top-0 left-0 w-64 h-64 bg-blue-600 rounded-full blur-[120px] opacity-20"></div>
-            <div class="absolute bottom-0 right-0 w-64 h-64 bg-lime-600 rounded-full blur-[120px] opacity-20"></div>
-        </div>
-    </section>
+        </section>
 
-    <footer class="py-12 px-6 text-center text-slate-400 border-t border-slate-200">
-        <p>© 2026 NEURO CARE Project. All rights reserved.</p>
+        <section class="max-w-4xl mx-auto mt-32 text-center fade-in">
+            <h2 class="text-3xl font-bold mb-10">日本の現状と早期発見</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 mb-12">
+                <div class="p-8 bg-white shadow-xl rounded-3xl">
+                    <div class="text-5xl font-extrabold text-blue-600 mb-2">700万人</div>
+                    <p class="text-slate-500">2025年には高齢者の<br>約5人に1人が認知症になると予測</p>
+                </div>
+                <div class="p-8 bg-white shadow-xl rounded-3xl">
+                    <div class="text-5xl font-extrabold text-lime-500">MCI</div>
+                    <p class="text-slate-500">「軽度認知障害」の段階で<br>適切な対策をすれば回復の可能性も</p>
+                </div>
+            </div>
+            <p class="text-slate-600 leading-loose">
+                認知症は「隠すべきもの」ではありません。<br>早期に発見し、適切なケアを始めることで、進行を緩やかにし、<br>ご家族も含めた生活の質を劇的に改善することができます。
+            </p>
+        </section>
+
+        <section id="contact" class="max-w-7xl mx-auto mt-32 mb-20 fade-in">
+            <div class="info-card p-12 md:p-16 border-2 border-blue-100">
+                <div class="text-center max-w-2xl mx-auto">
+                    <h2 class="text-3xl font-bold mb-6">ひとりで悩まず、専門家に相談を</h2>
+                    <p class="mb-10 text-slate-600">「もしかして？」と思ったら、まずは下記の窓口や、お近くの病院（もの忘れ外来など）へ相談しましょう。</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
+                        <div class="p-6 bg-blue-50 rounded-2xl">
+                            <h4 class="font-bold text-blue-800 mb-2">地域包括支援センター</h4>
+                            <p class="text-sm">高齢者の暮らしを支える公的な相談窓口です。各市区町村に設置されています。</p>
+                        </div>
+                        <div class="p-6 bg-lime-50 rounded-2xl">
+                            <h4 class="font-bold text-green-800 mb-2">かかりつけ医</h4>
+                            <p class="text-sm">まずは日頃の健康状態を知っている医師に相談し、専門医を紹介してもらいましょう。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="py-12 px-6 text-center text-slate-400 bg-white border-t border-slate-100 relative z-10">
+        <p class="mb-2">© 2026 認知症理解と対策のための解説ガイド</p>
+        <p class="text-xs italic">※このサイトは解説を目的としたサンプルであり、具体的な医学的診断については必ず医師にご相談ください。</p>
     </footer>
 
     <script>
-        // --- Three.js Setup (Organic Floating Object) ---
+        // --- Three.js Background (Gentle Organic Motion) ---
         const canvas = document.getElementById('three-canvas');
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -225,69 +272,48 @@
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setPixelRatio(window.devicePixelRatio);
 
-        // Geometry: Soft Organic Sphere (Icosahedron with high detail)
-        const geometry = new THREE.IcosahedronGeometry(2, 5);
+        // 脳やネットワークをイメージした柔らかいワイヤーフレーム
+        const geometry = new THREE.IcosahedronGeometry(2, 3);
         const material = new THREE.MeshPhongMaterial({
             color: 0x0054A6,
             wireframe: true,
             transparent: true,
-            opacity: 0.15,
+            opacity: 0.1
         });
-        const sphere = new THREE.Mesh(geometry, material);
-        scene.add(sphere);
+        const mesh = new THREE.Mesh(geometry, material);
+        scene.add(mesh);
 
-        // Lights
-        const light = new THREE.DirectionalLight(0xffffff, 1);
-        light.position.set(5, 5, 5);
+        const light = new THREE.PointLight(0xffffff, 1);
+        light.position.set(10, 10, 10);
         scene.add(light);
-        scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+        scene.add(new THREE.AmbientLight(0xffffff, 0.8));
 
-        camera.position.z = 5;
-
-        // Mouse Interaction
-        let mouseX = 0;
-        let mouseY = 0;
-        window.addEventListener('mousemove', (e) => {
-            mouseX = (e.clientX / window.innerWidth) - 0.5;
-            mouseY = (e.clientY / window.innerHeight) - 0.5;
-        });
+        camera.position.z = 4;
 
         function animate() {
             requestAnimationFrame(animate);
-            sphere.rotation.y += 0.003;
-            sphere.rotation.x += 0.002;
-            
-            // Smoothly follow mouse
-            sphere.position.x += (mouseX * 2 - sphere.position.x) * 0.05;
-            sphere.position.y += (-mouseY * 2 - sphere.position.y) * 0.05;
-
+            mesh.rotation.y += 0.001;
+            mesh.rotation.x += 0.0005;
             renderer.render(scene, camera);
         }
         animate();
 
-        // Responsive Three.js
         window.addEventListener('resize', () => {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
 
-        // --- Intersection Observer for Fade-in Animations ---
-        const observerOptions = {
-            threshold: 0.1
-        };
-
+        // --- Intersection Observer (Fade-in) ---
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('visible');
                 }
             });
-        }, observerOptions);
+        }, { threshold: 0.15 });
 
-        document.querySelectorAll('.fade-in-up').forEach(el => {
-            observer.observe(el);
-        });
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
     </script>
 </body>
 </html>
