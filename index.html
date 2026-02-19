@@ -1,374 +1,345 @@
-# ninchi<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2026 Dementia Analysis | 日本における認知症の疫学的分析と対策</title>
+    <title>2026 認知症の疫学的分析と予防戦略 | 包括的報告書</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;800&family=Noto+Sans+JP:wght@300;400;700;900&display=swap" rel="stylesheet">
-    
-    <style>
-        :root {
-            --accent-blue: #007AFF;
-            --accent-lime: #DFFF00;
-            --glass: rgba(255, 255, 255, 0.03);
-            --glass-border: rgba(255, 255, 255, 0.1);
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        deepBlue: '#0054A6',
+                        leafGreen: '#88C440',
+                        lightGrey: '#F8F9FA',
+                    },
+                    fontFamily: {
+                        sans: ['Noto+Sans+JP', 'sans-serif'],
+                    },
+                    borderRadius: {
+                        '4xl': '2.5rem',
+                    }
+                }
+            }
         }
-
+    </script>
+    <style>
         body {
-            font-family: 'Inter', 'Noto Sans JP', sans-serif;
-            background: #020617;
-            color: #f8fafc;
+            background: linear-gradient(135deg, #eef2f3 0%, #88C44022 50%, #0054A611 100%);
+            scroll-behavior: smooth;
             overflow-x: hidden;
         }
 
-        /* Grainy Gradient Background */
-        .bg-grainy {
-            background: radial-gradient(circle at 50% 50%, #1e293b 0%, #020617 100%);
-            position: fixed;
-            width: 100vw;
-            height: 100vh;
-            z-index: -2;
-        }
-        .bg-grainy::before {
-            content: "";
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            opacity: 0.04;
-            pointer-events: none;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3ExternalIcon %3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-            z-index: -1;
+        /* Glassmorphism Classes */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.45);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
         }
 
-        /* Glassmorphism */
-        .glass {
-            background: var(--glass);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-        }
-        .glass:hover {
-            background: rgba(255, 255, 255, 0.06);
-            border-color: rgba(255, 255, 255, 0.2);
-            transform: translateY(-4px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        /* Bento Grid Custom Styles */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
         }
 
         /* Animations */
-        .fade-up {
+        .reveal {
             opacity: 0;
             transform: translateY(30px);
-            transition: all 0.8s ease-out;
+            transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
         }
-        .fade-up.visible {
+
+        .reveal.active {
             opacity: 1;
             transform: translateY(0);
         }
 
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #020617; }
-        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+        /* Bouncy Micro-interaction */
+        .btn-bounce {
+            transition: transform 0.3s cubic-bezier(0.68, -0.6, 0.32, 1.6);
+        }
+        .btn-bounce:hover {
+            transform: scale(1.08);
+        }
 
         #three-canvas {
             position: absolute;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
             z-index: 0;
             pointer-events: none;
         }
-
-        .text-gradient {
-            background: linear-gradient(to right, #fff, #94a3b8);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .bento-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            grid-template-rows: auto;
-            gap: 1.5rem;
-        }
-
-        @media (max-width: 1024px) {
-            .bento-grid { grid-template-columns: repeat(2, 1fr); }
-        }
-        @media (max-width: 640px) {
-            .bento-grid { grid-template-columns: 1fr; }
-        }
     </style>
 </head>
-<body>
+<body class="text-gray-800 leading-relaxed">
 
-    <div class="bg-grainy"></div>
-
-    <header class="relative h-screen flex items-center justify-center overflow-hidden px-6">
-        <div id="three-canvas"></div>
-        <div class="relative z-10 text-center max-w-5xl">
-            <span class="inline-block px-4 py-1.5 mb-6 text-xs font-bold tracking-widest uppercase border border-blue-500/50 rounded-full text-blue-400 glass">
-                2026 Pathological Report
-            </span>
-            <h1 class="text-6xl md:text-8xl font-black mb-8 leading-tight tracking-tighter">
-                <span class="text-gradient">3人に1人の未来を、</span><br>
-                <span class="text-blue-500">科学で書き換える。</span>
+    <header class="relative min-h-screen flex items-center justify-center overflow-hidden">
+        <canvas id="three-canvas"></canvas>
+        <div class="container mx-auto px-6 relative z-10 text-center">
+            <span class="inline-block py-2 px-4 glass-card rounded-full text-deepBlue font-bold text-sm mb-6 reveal">2026年最新疫学レポート</span>
+            <h1 class="text-4xl md:text-7xl font-bold text-deepBlue mb-8 reveal" style="transition-delay: 0.1s;">
+                認知症は<br><span class="text-leafGreen">「正しく防ぐ」</span>時代へ
             </h1>
-            <p class="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed font-light">
-                2040年、日本の高齢者の約15%が直面する認知機能の低下。最新のエビデンスに基づき、その原因疾患と「修正可能なリスク因子」を解き明かします。
+            <p class="text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto mb-10 reveal" style="transition-delay: 0.2s;">
+                日本の超高齢社会における認知症の構造変化と、<br>科学的エビデンスに基づく6つの予防習慣を解説します。
             </p>
-            <div class="mt-12">
-                <a href="#analysis" class="px-8 py-4 bg-white text-black font-bold rounded-full hover:scale-110 transition-transform inline-block">
-                    詳細を分析する
+            <div class="reveal" style="transition-delay: 0.3s;">
+                <a href="#summary" class="bg-deepBlue text-white px-10 py-5 rounded-full text-xl font-bold btn-bounce inline-block shadow-lg">
+                    詳しく知る
                 </a>
             </div>
         </div>
-        <div class="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce opacity-50">
-            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 14l-7 7-7-7m14-8l-7 7-7-7"></path></svg>
-        </div>
     </header>
 
-    <main class="max-w-7xl mx-auto px-6 py-24 space-y-32">
-        
-        <section id="analysis" class="fade-up">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="glass p-10 flex flex-col justify-between">
-                    <h3 class="text-slate-400 text-sm font-bold uppercase tracking-widest">2040年推計</h3>
+    <section id="summary" class="py-24 container mx-auto px-6">
+        <div class="max-w-4xl mx-auto glass-card p-10 md:p-16 rounded-4xl reveal">
+            <h2 class="text-3xl font-bold text-deepBlue mb-8 border-l-8 border-leafGreen pl-6">エグゼクティブサマリー</h2>
+            <p class="text-lg mb-6">2040年、高齢者の約3人に1人が認知機能の低下に直面すると予測されています。本報告書では、かつての「脳血管性」から「アルツハイマー型」主体へと変化した日本の現状を分析します。</p>
+            <div class="grid md:grid-cols-2 gap-8 mt-12">
+                <div class="p-6 bg-white/50 rounded-3xl border border-white">
+                    <h3 class="font-bold text-deepBlue mb-2">第1部：原因疾患の理解</h3>
+                    <p class="text-sm">頻度順位と病理学的メカニズムを詳述。</p>
+                </div>
+                <div class="p-6 bg-white/50 rounded-3xl border border-white">
+                    <h3 class="font-bold text-leafGreen mb-2">第2部：生活習慣のインパクト</h3>
+                    <p class="text-sm">修正可能な6つのリスク因子の影響度を順位付け。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-24 bg-white/30">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16 reveal">
+                <h2 class="text-4xl font-bold text-deepBlue mb-4">原因疾患の頻度順リスト</h2>
+                <p class="text-gray-600">現代日本における認知症の主な要因</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 grid-rows-2 gap-6 h-auto md:h-[800px]">
+                <div class="md:col-span-2 md:row-span-2 glass-card rounded-4xl p-10 flex flex-col justify-between reveal overflow-hidden group">
                     <div>
-                        <span class="text-6xl font-black text-white">584</span><span class="text-2xl font-bold ml-2">万人</span>
-                        <p class="mt-4 text-slate-400">認知症有病率。MCIを含めると1,000万人を超えると予測されています。</p>
+                        <span class="text-6xl font-black text-deepBlue/10">01</span>
+                        <h3 class="text-3xl font-bold text-deepBlue mt-4 mb-4">アルツハイマー型 (AD)</h3>
+                        <p class="text-lg text-gray-700">構成比：約67.6%。アミロイドβの蓄積が20年以上前から静かに進行します。</p>
+                    </div>
+                    <img src="https://images.unsplash.com/photo-1576091160550-2173dad99901?auto=format&fit=crop&w=800&q=80" alt="Medical Science" class="rounded-3xl mt-6 grayscale group-hover:grayscale-0 transition duration-500">
+                </div>
+
+                <div class="md:col-span-2 glass-card rounded-4xl p-8 flex items-center gap-6 reveal transition-all hover:bg-white/60">
+                    <div class="flex-1">
+                        <span class="text-4xl font-black text-deepBlue/10">02</span>
+                        <h3 class="text-2xl font-bold text-deepBlue mt-2">血管性認知症 (VaD)</h3>
+                        <p class="text-sm text-gray-600 mt-2">構成比：約20%。高血圧や塩分過多による脳血管障害が原因です。</p>
+                    </div>
+                    <div class="w-32 h-32 bg-deepBlue/5 rounded-2xl flex items-center justify-center">
+                        <svg class="w-16 h-16 text-deepBlue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                     </div>
                 </div>
-                <div class="glass p-10 border-l-4 border-blue-500">
-                    <h3 class="text-slate-400 text-sm font-bold uppercase tracking-widest">最頻出疾患</h3>
-                    <div class="mt-6">
-                        <span class="text-5xl font-black text-gradient">67.6%</span>
-                        <p class="mt-4 text-slate-400">アルツハイマー型認知症。日本における構造変化（パラダイムシフト）の象徴。</p>
+
+                <div class="md:col-span-1 glass-card rounded-4xl p-8 reveal transition-all hover:bg-white/60">
+                    <span class="text-4xl font-black text-deepBlue/10">03</span>
+                    <h3 class="text-xl font-bold text-deepBlue mt-2">レビー小体型</h3>
+                    <p class="text-sm text-gray-600 mt-2">幻視や手の震えが特徴的。</p>
+                </div>
+
+                <div class="md:col-span-1 glass-card rounded-4xl p-8 reveal transition-all hover:bg-white/60">
+                    <span class="text-4xl font-black text-deepBlue/10">04</span>
+                    <h3 class="text-xl font-bold text-deepBlue mt-2">前頭側頭型</h3>
+                    <p class="text-sm text-gray-600 mt-2">人格変化や行動異常が先行。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-24 bg-deepBlue">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-20 reveal">
+                <h2 class="text-4xl font-bold text-white mb-4">生活習慣リスク・インパクト順位</h2>
+                <p class="text-blue-200">科学的に証明された、脳を傷つける行動とその影響度</p>
+            </div>
+
+            <div class="space-y-6 max-w-5xl mx-auto">
+                <div class="glass-card bg-white/10 text-white rounded-3xl p-8 flex flex-wrap md:flex-nowrap items-center gap-8 reveal border-white/20">
+                    <div class="bg-leafGreen text-white w-16 h-16 rounded-full flex items-center justify-center text-3xl font-bold shadow-lg">1</div>
+                    <div class="flex-1">
+                        <div class="flex items-center gap-4 mb-2">
+                            <h3 class="text-2xl font-bold">血糖値スパイク</h3>
+                            <span class="bg-red-500 text-xs px-2 py-1 rounded">影響度：極めて大</span>
+                        </div>
+                        <p class="text-blue-100">食後の急激な血糖変動は、脳の血管を傷つけ、ゴミの蓄積を加速させます。</p>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-sm block opacity-70">推定リスク</span>
+                        <span class="text-3xl font-bold">HR 2.65</span>
                     </div>
                 </div>
-                <div class="glass p-10">
-                    <h3 class="text-slate-400 text-sm font-bold uppercase tracking-widest">予防可能性</h3>
-                    <div class="mt-6">
-                        <span class="text-5xl font-black text-lime-400">45%</span>
-                        <p class="mt-4 text-slate-400">Lancet委員会が提唱する、生活習慣の修正によって回避可能なリスクの割合。</p>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="glass-card bg-white/10 text-white rounded-3xl p-8 reveal border-white/20">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="bg-white/20 w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold">2</div>
+                            <h3 class="text-xl font-bold">強いストレス</h3>
+                        </div>
+                        <p class="text-sm text-blue-100">コルチゾールが記憶の司令塔「海馬」を物理的に萎縮させます。</p>
+                    </div>
+                    <div class="glass-card bg-white/10 text-white rounded-3xl p-8 reveal border-white/20">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="bg-white/20 w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold">3</div>
+                            <h3 class="text-xl font-bold">運動不足</h3>
+                        </div>
+                        <p class="text-sm text-blue-100">筋肉から放出される「脳の肥料(BDNF)」の供給が断たれます。</p>
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="glass-card bg-white/5 text-white p-6 rounded-3xl reveal text-center border-white/10">
+                        <h4 class="font-bold mb-2">受動的な動画視聴</h4>
+                        <p class="text-xs text-blue-200">4時間以上の視聴は前頭葉を「廃用性萎縮」させます。</p>
+                    </div>
+                    <div class="glass-card bg-white/5 text-white p-6 rounded-3xl reveal text-center border-white/10">
+                        <h4 class="font-bold mb-2">長時間の昼寝</h4>
+                        <p class="text-xs text-blue-200">1時間以上の昼寝は夜間の脳内洗浄システムを阻害します。</p>
+                    </div>
+                    <div class="glass-card bg-white/5 text-white p-6 rounded-3xl reveal text-center border-white/10">
+                        <h4 class="font-bold mb-2">朝の散歩不足</h4>
+                        <p class="text-xs text-blue-200">光曝露の欠如は概日リズムを狂わせ、脳を守る力を弱めます。</p>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <section class="space-y-12 fade-up">
-            <div class="text-center">
-                <h2 class="text-4xl md:text-5xl font-black mb-4">原因疾患の深層分析</h2>
-                <p class="text-slate-400">日本における原因疾患の構成比と病理学的背景</p>
-            </div>
-            
-            <div class="bento-grid">
-                <div class="col-span-1 md:col-span-2 row-span-2 glass overflow-hidden relative group">
-                    <img src="https://images.unsplash.com/photo-1559757175-5700dde675bc?auto=format&fit=crop&q=80&w=800" class="absolute inset-0 w-full h-full object-cover opacity-20 group-hover:scale-110 transition-transform duration-700" alt="Brain">
-                    <div class="relative p-10 h-full flex flex-col justify-end">
-                        <span class="text-blue-400 font-bold mb-2">Rank 01</span>
-                        <h3 class="text-3xl font-black mb-4">アルツハイマー型 (AD)</h3>
-                        <p class="text-slate-300 leading-relaxed">アミロイドβの蓄積から始まる静かな進行。日本人の長寿化に伴い圧倒的な最頻出疾患へ。</p>
-                    </div>
+    <section class="py-24">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-wrap items-center bg-white rounded-4xl shadow-2xl overflow-hidden reveal">
+                <div class="w-full md:w-1/2 h-96 md:h-auto overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&w=1000&q=80" alt="Morning Walk" class="w-full h-full object-cover">
                 </div>
-
-                <div class="col-span-1 md:col-span-2 glass p-10 flex items-center gap-8">
-                    <div class="hidden md:block w-32 h-32 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-900 shrink-0"></div>
-                    <div>
-                        <span class="text-slate-400 font-bold mb-2 uppercase tracking-tighter text-xs">Rank 02 | 19.5%</span>
-                        <h3 class="text-2xl font-black mb-2">血管性認知症 (VaD)</h3>
-                        <p class="text-sm text-slate-400">脳梗塞や微小血管病変の蓄積。生活習慣の管理で最も予防が期待できる領域。</p>
-                    </div>
-                </div>
-
-                <div class="glass p-8 flex flex-col justify-between">
-                    <h3 class="text-xl font-bold">レビー小体型</h3>
-                    <p class="text-sm text-slate-400 mt-4">幻視やパーキンソニズムが特徴。誤診を防ぐ正確な鑑別が重要。</p>
-                </div>
-
-                <div class="glass p-8 flex flex-col justify-between">
-                    <h3 class="text-xl font-bold">前頭側頭型</h3>
-                    <p class="text-sm text-slate-400 mt-4">若年性でも見られる人格変化。行動異常が初期から目立つ特殊な病態。</p>
-                </div>
-            </div>
-        </section>
-
-        <section class="space-y-12 fade-up">
-            <div class="flex flex-col md:flex-row justify-between items-end gap-6">
-                <div class="max-w-2xl">
-                    <h2 class="text-4xl md:text-5xl font-black mb-4 italic text-lime-400 underline decoration-lime-400/30">Lifestyle Risks Impact</h2>
-                    <p class="text-slate-400 text-lg">特定の習慣が脳内炎症を加速させる。科学的影響度の順位付け。</p>
-                </div>
-                <div class="text-right">
-                    <span class="text-xs font-mono text-slate-500">Sorted by Hazard Ratio (HR)</span>
+                <div class="w-full md:w-1/2 p-12 md:p-20">
+                    <h2 class="text-4xl font-bold text-deepBlue mb-8">明日からの<br>「脳を守る」新習慣</h2>
+                    <ul class="space-y-6">
+                        <li class="flex items-start gap-4">
+                            <div class="w-8 h-8 rounded-full bg-leafGreen flex items-center justify-center text-white shrink-0 mt-1">1</div>
+                            <div>
+                                <h4 class="font-bold text-xl">ベジファーストの徹底</h4>
+                                <p class="text-gray-600">食事は野菜から。血糖値スパイクを防ぐことが最優先です。</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-4">
+                            <div class="w-8 h-8 rounded-full bg-leafGreen flex items-center justify-center text-white shrink-0 mt-1">2</div>
+                            <div>
+                                <h4 class="font-bold text-xl">起床1時間以内の散歩</h4>
+                                <p class="text-gray-600">太陽光を浴びながら歩くことで、夜間の脳内洗浄が予約されます。</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-4">
+                            <div class="w-8 h-8 rounded-full bg-leafGreen flex items-center justify-center text-white shrink-0 mt-1">3</div>
+                            <div>
+                                <h4 class="font-bold text-xl">能動的な活動へシフト</h4>
+                                <p class="text-gray-600">動画を「見る」から、趣味や会話で脳を「使う」時間へ。</p>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
             </div>
+        </div>
+    </section>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="glass p-8 border-t-4 border-red-500">
-                    <div class="flex justify-between items-start mb-6">
-                        <div class="bg-red-500/10 text-red-500 p-2 rounded-lg font-black text-sm">Critical</div>
-                        <span class="text-4xl font-black opacity-20">01</span>
-                    </div>
-                    <h4 class="text-xl font-black mb-3">血糖値スパイク</h4>
-                    <p class="text-sm text-slate-400 leading-relaxed mb-6">「糖毒性」による血管内皮障害。酸化ストレスが脳の防御機構を破壊します。</p>
-                    <div class="h-1 bg-slate-800 rounded-full overflow-hidden">
-                        <div class="w-full h-full bg-red-500"></div>
-                    </div>
-                </div>
-                <div class="glass p-8 border-t-4 border-orange-500">
-                    <div class="flex justify-between items-start mb-6">
-                        <div class="bg-orange-500/10 text-orange-500 p-2 rounded-lg font-black text-sm">Severe</div>
-                        <span class="text-4xl font-black opacity-20">02</span>
-                    </div>
-                    <h4 class="text-xl font-black mb-3">強いストレス</h4>
-                    <p class="text-sm text-slate-400 leading-relaxed mb-6">コルチゾールの過剰分泌が海馬を物理的に萎縮させ、神経炎症を引き起こします。</p>
-                    <div class="h-1 bg-slate-800 rounded-full overflow-hidden">
-                        <div class="w-[85%] h-full bg-orange-500"></div>
-                    </div>
-                </div>
-                <div class="glass p-8 border-t-4 border-yellow-500">
-                    <div class="flex justify-between items-start mb-6">
-                        <div class="bg-yellow-500/10 text-yellow-500 p-2 rounded-lg font-black text-sm">High</div>
-                        <span class="text-4xl font-black opacity-20">03</span>
-                    </div>
-                    <h4 class="text-xl font-black mb-3">運動不足</h4>
-                    <p class="text-sm text-slate-400 leading-relaxed mb-6">脳の肥料「BDNF」の供給低下。ゴミ（アミロイドβ）の排出機能が停滞します。</p>
-                    <div class="h-1 bg-slate-800 rounded-full overflow-hidden">
-                        <div class="w-[70%] h-full bg-yellow-500"></div>
-                    </div>
-                </div>
+    <footer class="bg-lightGrey py-20 border-t border-gray-200">
+        <div class="container mx-auto px-6 text-center">
+            <div class="mb-8">
+                <h3 class="text-2xl font-bold text-deepBlue">2026 認知症包括的報告書</h3>
+                <p class="text-gray-500 mt-2 italic">Based on Lancet Commission 2024 & Hisayama Study</p>
             </div>
-
-            <div class="glass p-12 bg-blue-600/5 relative overflow-hidden">
-                <div class="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-                    <div>
-                        <h3 class="text-3xl font-black mb-6">最強の防御習慣：朝の散歩</h3>
-                        <ul class="space-y-4 text-slate-300">
-                            <li class="flex items-center gap-3">
-                                <div class="w-2 h-2 bg-lime-400 rounded-full"></div>
-                                体内時計のリセットとメラトニン予約
-                            </li>
-                            <li class="flex items-center gap-3">
-                                <div class="w-2 h-2 bg-lime-400 rounded-full"></div>
-                                セロトニン活性による「脳内洗浄」の最大化
-                            </li>
-                            <li class="flex items-center gap-3">
-                                <div class="w-2 h-2 bg-lime-400 rounded-full"></div>
-                                複雑な屋外環境が海馬を強力に刺激
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="rounded-3xl overflow-hidden aspect-video">
-                        <img src="https://images.unsplash.com/photo-1502082553048-f009c37129b9?auto=format&fit=crop&q=80&w=800" class="w-full h-full object-cover" alt="Nature walk">
-                    </div>
-                </div>
+            <div class="flex justify-center gap-8 mb-12">
+                <a href="#" class="text-gray-400 hover:text-deepBlue">利用規約</a>
+                <a href="#" class="text-gray-400 hover:text-deepBlue">プライバシーポリシー</a>
+                <a href="#" class="text-gray-400 hover:text-deepBlue">お問い合わせ</a>
             </div>
-        </section>
-
-        <section class="text-center py-24 fade-up">
-            <div class="glass p-16 max-w-4xl mx-auto border-2 border-blue-500/20">
-                <h2 class="text-4xl md:text-5xl font-black mb-8">認知機能寿命を、<br>あなたの手で延ばす。</h2>
-                <p class="text-slate-400 mb-12 max-w-xl mx-auto leading-relaxed">
-                    老化は避けられませんが、認知症の発症は科学的な介入によってコントロール可能です。今日から始める「一歩」が、10年後の自分を守ります。
-                </p>
-                <button class="px-12 py-5 bg-blue-600 hover:bg-blue-500 text-white font-black rounded-full transition-all hover:scale-105 hover:shadow-[0_0_40px_rgba(37,99,235,0.4)]">
-                    詳細レポートをダウンロード
-                </button>
-            </div>
-        </section>
-    </main>
-
-    <footer class="py-12 px-6 border-t border-slate-800 text-center text-slate-500 text-sm">
-        <p>&copy; 2026 NeuroScience Report Japan. Created with Visionary UI.</p>
+            <p class="text-gray-400 text-sm">&copy; 2026 Dementia Research Institute Japan. All rights reserved.</p>
+        </div>
     </footer>
 
     <script>
-        // --- Three.js Implementation (Organic Neuron Sphere) ---
-        const initThree = () => {
-            const container = document.getElementById('three-canvas');
-            const scene = new THREE.Scene();
-            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-            const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+        // Three.js Background Implementation
+        const canvas = document.getElementById('three-canvas');
+        const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.z = 5;
+
+        // Create a soft organic shape (Sphere with noise-like movement)
+        const geometry = new THREE.IcosahedronGeometry(2, 6);
+        const material = new THREE.MeshStandardMaterial({
+            color: 0xffffff,
+            roughness: 0.1,
+            metalness: 0.1,
+            transparent: true,
+            opacity: 0.8,
+            emissive: 0x0054A6,
+            emissiveIntensity: 0.2
+        });
+        const sphere = new THREE.Mesh(geometry, material);
+        scene.add(sphere);
+
+        const light = new THREE.DirectionalLight(0x88C440, 1);
+        light.position.set(5, 5, 5);
+        scene.add(light);
+        scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+
+        // Mouse interaction
+        let mouseX = 0, mouseY = 0;
+        window.addEventListener('mousemove', (e) => {
+            mouseX = (e.clientX / window.innerWidth) - 0.5;
+            mouseY = (e.clientY / window.innerHeight) - 0.5;
+        });
+
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            // Subtle rotation and noise-like movement
+            sphere.rotation.y += 0.002;
+            sphere.rotation.x += 0.001;
+            
+            // Mouse reactiveness
+            sphere.position.x += (mouseX * 2 - sphere.position.x) * 0.05;
+            sphere.position.y += (-mouseY * 2 - sphere.position.y) * 0.05;
+
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // Handle Resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
-            container.appendChild(renderer.domElement);
+        });
 
-            // Create organic wireframe sphere
-            const geometry = new THREE.IcosahedronGeometry(2, 4);
-            const material = new THREE.MeshStandardMaterial({
-                color: 0x007AFF,
-                wireframe: true,
-                transparent: true,
-                opacity: 0.15,
-                emissive: 0x007AFF,
-                emissiveIntensity: 0.5
-            });
-            const sphere = new THREE.Mesh(geometry, material);
-            scene.add(sphere);
-
-            const light = new THREE.PointLight(0xffffff, 1);
-            light.position.set(5, 5, 5);
-            scene.add(light);
-            scene.add(new THREE.AmbientLight(0x404040));
-
-            camera.position.z = 5;
-
-            // Animation
-            const animate = () => {
-                requestAnimationFrame(animate);
-                sphere.rotation.y += 0.002;
-                sphere.rotation.x += 0.001;
-                
-                // Subtle morphing
-                const time = Date.now() * 0.001;
-                sphere.scale.set(
-                    1 + Math.sin(time) * 0.05,
-                    1 + Math.cos(time * 1.2) * 0.05,
-                    1 + Math.sin(time * 0.8) * 0.05
-                );
-                
-                renderer.render(scene, camera);
-            };
-
-            // Mouse tracking
-            window.addEventListener('mousemove', (e) => {
-                const x = (e.clientX / window.innerWidth) - 0.5;
-                const y = (e.clientY / window.innerHeight) - 0.5;
-                sphere.position.x = x * 0.5;
-                sphere.position.y = -y * 0.5;
-            });
-
-            animate();
-
-            // Resize
-            window.addEventListener('resize', () => {
-                camera.aspect = window.innerWidth / window.innerHeight;
-                camera.updateProjectionMatrix();
-                renderer.setSize(window.innerWidth, window.innerHeight);
-            });
+        // Scroll Reveal Animation
+        const observerOptions = {
+            threshold: 0.1
         };
 
-        // --- Intersection Observer (Fade-up) ---
-        const initAnimations = () => {
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
-                    }
-                });
-            }, { threshold: 0.1 });
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, observerOptions);
 
-            document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
-        };
-
-        window.onload = () => {
-            initThree();
-            initAnimations();
-        };
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
     </script>
 </body>
-</html>syou
+</html>
